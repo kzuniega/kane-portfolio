@@ -1,4 +1,4 @@
-# BREVO_SENDER_NAME and BREVO_SENDER_EMAIL are public, non-secret values: the
+# BREVO_SENDER_NAME, BREVO_SENDER_EMAIL and CONTACT_RECIPIENT_EMAIL are non-secret values: the
 # sender name and address appear on every email sent and may also appear as
 # regular page content, so they are excluded from secrets scanning.
 #
@@ -9,5 +9,5 @@
 # public/, and the rest of the repo) are still scanned, so a key that leaks into
 # browser JavaScript or a committed file will still fail the build.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_NAME,BREVO_SENDER_EMAIL"
+  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_NAME,BREVO_SENDER_EMAIL,CONTACT_RECIPIENT_EMAIL"
   SECRETS_SCAN_OMIT_PATHS = ".netlify/functions-internal,.next/server,.next/cache"
