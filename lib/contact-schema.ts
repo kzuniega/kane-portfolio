@@ -10,6 +10,12 @@ function hasMessageContent(html: string) {
 }
 
 export const contactFormSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .max(120, "Name must be 120 characters or fewer.")
+    .optional()
+    .default(""),
   email: z
     .string()
     .trim()
@@ -30,3 +36,4 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
+export type ContactFormInputValues = z.input<typeof contactFormSchema>;

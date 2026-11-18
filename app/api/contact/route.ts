@@ -68,7 +68,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const { email: cleanEmail, subject: cleanSubject, body: safeBody } = validation.data;
+  const { name: submittedName, email: cleanEmail, subject: cleanSubject, body: safeBody } = validation.data;
+  const cleanName = submittedName.trim() || undefined;
   const plainBody = sanitizeHtml(safeBody, { allowedTags: [], allowedAttributes: {} })
     .replace(/&nbsp;/gi, " ")
     .trim();
@@ -83,12 +84,19 @@ export async function POST(request: Request) {
   }
 
   const htmlContent = [
+    ...(cleanName ? [`<p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>`] : []),
     `<p><strong>From:</strong> ${escapeHtml(cleanEmail)}</p>`,
     `<p><strong>Subject:</strong> ${escapeHtml(cleanSubject)}</p>`,
     "<hr>",
     safeBody,
   ].join("");
-  const textContent = `From: ${cleanEmail}\nSubject: ${cleanSubject}\n\n${plainBody}`;
+  const textContent = [
+    ...(cleanName ? [`Name: ${cleanName}`] : []),
+    `From: ${cleanEmail}`,
+    `Subject: ${cleanSubject}`,
+    "",
+    plainBody,
+  ].join("\n");
 
   let response: Response;
   try {

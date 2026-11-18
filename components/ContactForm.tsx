@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useForm } from "react-hook-form";
-import { contactFormSchema, type ContactFormValues } from "@/lib/contact-schema";
+import { contactFormSchema, type ContactFormInputValues, type ContactFormValues } from "@/lib/contact-schema";
 
 type SubmissionStatus = {
   message: string;
@@ -20,10 +20,11 @@ export function ContactForm() {
     setValue,
     reset,
     formState: { errors, isSubmitting, isValid },
-  } = useForm<ContactFormValues>({
+  } = useForm<ContactFormInputValues, unknown, ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     mode: "onChange",
     defaultValues: {
+      name: "",
       email: "",
       subject: "",
       body: "",
@@ -41,7 +42,7 @@ export function ContactForm() {
       attributes: {
         class: "contact-editor-content",
         role: "textbox",
-        "aria-label": "Message body",
+      "aria-label": "Give me a message",
         "aria-multiline": "true",
       },
     },
@@ -77,6 +78,19 @@ export function ContactForm() {
     <form className="contact-form" onSubmit={handleSubmit(submitMessage)} noValidate>
       <p className="eyebrow">Send a message</p>
       <div className="contact-form-field">
+        <label htmlFor="contact-name">Name (Optional)</label>
+        <input
+          {...register("name")}
+          id="contact-name"
+          type="text"
+          autoComplete="name"
+          maxLength={120}
+          aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? "contact-name-error" : undefined}
+        />
+        {errors.name && <p id="contact-name-error" className="contact-field-error">{errors.name.message}</p>}
+      </div>
+      <div className="contact-form-field">
         <label htmlFor="contact-email">Email</label>
         <input
           {...register("email")}
@@ -104,7 +118,7 @@ export function ContactForm() {
         {errors.subject && <p id="contact-subject-error" className="contact-field-error">{errors.subject.message}</p>}
       </div>
       <div className="contact-form-field">
-        <span id="contact-body-label">Body</span>
+        <span id="contact-body-label">Give me a message</span>
         <div className="contact-editor">
           <div className="contact-editor-toolbar" aria-label="Text formatting">
             <button
