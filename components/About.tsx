@@ -3,7 +3,6 @@ import { Reveal } from "@/components/Reveal";
 import { ImagePreview } from "@/components/ImagePreview";
 import { contact } from "@/data/contact";
 import profileImage from "@/public/assets/profile-image.jpg";
-import { FiDownload } from "react-icons/fi";
 import { SiLaravel, SiMysql, SiNextdotjs, SiNuxtdotjs, SiPostgresql, SiPostman, SiPython, SiSupabase } from "react-icons/si";
 
 const technologies = [
@@ -53,11 +52,6 @@ export function About() {
                 ))}
               </ul>
             </div>
-            <a href="/resume/RESUME_ZUNIEGA.pdf" download="RESUME_KZ.pdf" className="resume-download">
-              <FiDownload aria-hidden="true" focusable="false" />
-              <span>Check my resume</span>
-              <span className="resume-format">PDF</span>
-            </a>
           </div>
         </div>
       </Reveal>

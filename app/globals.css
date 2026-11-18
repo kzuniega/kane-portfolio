@@ -12,6 +12,7 @@
   --grid-line: #0000000c;
   --image-shadow: #00000040;
   --dialog-shadow: #00000033;
+  --card-radius: 0.75rem;
   color-scheme: light;
 }
 
@@ -75,6 +76,7 @@ body {
   font-family: var(--font-dm-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+button { border-radius: var(--card-radius); }
 ::selection { background: var(--ink); color: var(--paper); }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
 .portfolio-page { overflow: clip; }
@@ -121,7 +123,7 @@ body {
   height: 36px;
   padding: 3px;
   border: 1px solid var(--rule);
-  border-radius: 999px;
+  border-radius: var(--card-radius);
   background: var(--surface);
   color: var(--muted);
   cursor: pointer;
@@ -202,6 +204,12 @@ body {
 .hero-bottom { margin-top: clamp(2.5rem, 5vw, 5rem); }
 .hero-intro { max-width: 38rem; font-size: 16px; line-height: 1.8; letter-spacing: -0.01em; }
 .hero-intro > span { color: var(--muted); }
+.hero-resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin-top: 1.5rem; }
+.hero-resume-view { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.75rem 1rem; border: 1px solid var(--ink); border-radius: var(--card-radius); background: var(--paper); color: var(--ink); font-size: 14px; transition: background-color 200ms ease, color 200ms ease; }
+.hero-resume-view > svg, .hero-resume-download > svg { width: 18px; height: 18px; flex-shrink: 0; }
+.hero-resume-view:hover, .hero-resume-view:focus-visible { background: var(--ink); color: var(--paper); }
+.hero-resume-download { display: inline-flex; min-height: 44px; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 14px; text-underline-offset: 4px; }
+.hero-resume-download:hover, .hero-resume-download:focus-visible { color: var(--ink); text-decoration-line: underline; }
 
 /* Projects sit on the page, rather than inside repeated cards. */
 .work-section { border-top: 1px solid var(--rule); padding-top: 1.75rem; }
@@ -220,12 +228,12 @@ body {
 .project-card-trigger:focus-visible { outline: none; }
 .project-card-preview { position: relative; display: block; }
 .project-preview-link { position: relative; display: block; }
-.project-image { display: block; position: relative; aspect-ratio: 16 / 10; width: 100%; overflow: hidden; border: 1px solid var(--rule); border-radius: 0.75rem; background: var(--surface); transform: scale(1); transform-origin: center; transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 650ms ease, border-color 250ms ease; }
+.project-image { display: block; position: relative; aspect-ratio: 16 / 10; width: 100%; overflow: hidden; border: 1px solid var(--rule); border-radius: var(--card-radius); background: transparent; transform: scale(1); transform-origin: center; transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 650ms ease, border-color 250ms ease; }
 .project-screenshot-image { object-fit: contain; padding: clamp(0.75rem, 1.8vw, 1.75rem); transform: scale(1); transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1); }
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .project-entry:hover .project-image, .project-entry:focus-within .project-image, .project-preview-link:hover .project-image, .project-preview-link:focus-visible .project-image { box-shadow: 0 16px 40px -20px var(--image-shadow); }
   .project-entry:hover .project-screenshot-image, .project-entry:focus-within .project-screenshot-image, .project-preview-link:hover .project-screenshot-image, .project-preview-link:focus-visible .project-screenshot-image { transform: scale(1.04); }
-  .project-entry:hover .project-image, .project-entry:focus-within .project-image { border-color: #151515; }
+  .project-entry:hover .project-image, .project-entry:focus-within .project-image { border-color: var(--ink); }
 }
 
 .image-preview-trigger { display: block; width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; text-align: inherit; cursor: zoom-in; touch-action: manipulation; }
@@ -244,7 +252,7 @@ body {
   padding: 1rem;
   overflow: hidden;
   border: 1px solid var(--rule);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   background: var(--paper);
   box-shadow: 0 24px 80px var(--dialog-shadow);
   transform: translate(-50%, -50%);
@@ -310,7 +318,7 @@ body {
 .project-dialog-header > div { min-width: 0; }
 .project-dialog-category { margin-bottom: 0.5rem; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .dialog-title.project-dialog-title { font-size: clamp(1.5rem, 3.5vw, 2.25rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.15; }
-.project-dialog-close { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin: -0.5rem -0.5rem 0 0; border: 1px solid var(--rule); border-radius: 50%; color: var(--ink); background: var(--paper); cursor: pointer; transition: background-color 180ms ease; }
+.project-dialog-close { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin: -0.5rem -0.5rem 0 0; border: 1px solid var(--rule); border-radius: var(--card-radius); color: var(--ink); background: var(--paper); cursor: pointer; transition: background-color 180ms ease; }
 .project-dialog-close:hover { background: var(--surface); }
 .project-dialog-close:focus-visible { outline-offset: 3px; }
 .project-dialog-close > svg { width: 20px; height: 20px; }
@@ -340,7 +348,7 @@ body {
 .about-section { margin-top: clamp(5rem, 10vw, 10rem); padding-top: clamp(2.5rem, 5vw, 5rem); border-top: 1px solid var(--rule); }
 .about-layout { display: grid; grid-template-areas: "portrait" "copy" "extras"; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; max-width: 62rem; margin-inline: auto; align-items: start; }
 .about-portrait { grid-area: portrait; width: min(100%, 160px); justify-self: center; }
-.about-portrait-image { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 8px; }
+.about-portrait-image { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: var(--card-radius); }
 .about-copy { grid-area: copy; min-width: 0; text-align: center; }
 .about-heading { margin-top: 0.75rem; font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1.15; overflow-wrap: anywhere; }
 .about-description { max-width: 36rem; margin: 1.25rem auto 0; font-size: 16px; line-height: 1.8; color: var(--muted); }
@@ -350,11 +358,6 @@ body {
 .technology-list li { display: flex; min-width: 0; align-items: center; gap: 0.65rem; padding-block: 0.5rem; font-size: 14px; }
 .technology-list li > span { min-width: 0; overflow-wrap: anywhere; }
 .technology-icon { width: 22px; height: 22px; flex-shrink: 0; }
-.resume-download { display: inline-flex; width: 100%; max-width: 100%; min-height: 48px; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; padding: 0.75rem 1rem; border: 1px solid var(--ink); border-radius: 4px; font-size: 14px; transition: background 200ms ease, color 200ms ease; }
-.resume-download > svg { width: 18px; height: 18px; flex-shrink: 0; }
-.resume-format { font-size: 12px; opacity: 0.7; }
-.resume-download:hover, .resume-download:focus-visible { background: var(--ink); color: var(--paper); }
-
 /* The closing section continues the same page rhythm. */
 .contact-section { margin-top: clamp(5rem, 10vw, 10rem); padding-top: clamp(2.5rem, 5vw, 5rem); border-top: 1px solid var(--rule); }
 .contact-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem; }
@@ -382,7 +385,6 @@ body {
   .about-copy { text-align: left; }
   .about-description { margin-inline: 0; }
   .technology-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem 1rem; }
-  .resume-download { width: fit-content; }
 }
 @media (min-width: 768px) {
   .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4rem 2rem; }

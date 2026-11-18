@@ -1,3 +1,5 @@
+import { FiArrowUpRight, FiDownload } from "react-icons/fi";
+
 export function Hero() {
   return (
     <section aria-labelledby="intro-heading" className="hero-section page-shell">
@@ -16,6 +18,26 @@ export function Hero() {
           I love untangling tough problems.
           <span> Then making the complicated feel simple.</span>
         </p>
+        <div className="hero-resume-actions">
+          <a
+            href="/resume/RESUME_ZUNIEGA.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hero-resume-view"
+            aria-label="View résumé (opens in a new tab)"
+          >
+            <span>View résumé</span>
+            <FiArrowUpRight aria-hidden="true" focusable="false" />
+          </a>
+          <a
+            href="/resume/RESUME_ZUNIEGA.pdf"
+            download="RESUME_KZ.pdf"
+            className="hero-resume-download"
+          >
+            <FiDownload aria-hidden="true" focusable="false" />
+            <span>Download PDF</span>
+          </a>
+        </div>
       </div>
     </section>
   );
