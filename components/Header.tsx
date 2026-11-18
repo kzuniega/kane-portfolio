@@ -19,6 +19,7 @@ export function Header() {
   const pendingTarget = useRef<HTMLElement | null>(null);
   const menuNavigationTimer = useRef<number | null>(null);
   const menuNavigationFrame = useRef<number | null>(null);
+  const scrollAnimationFrame = useRef<number | null>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -39,15 +40,28 @@ export function Header() {
       if (!frame) frame = requestAnimationFrame(updateActiveSection);
     }
 
+    function cancelScrollAnimation() {
+      if (scrollAnimationFrame.current === null) return;
+      cancelAnimationFrame(scrollAnimationFrame.current);
+      scrollAnimationFrame.current = null;
+    }
+
     scheduleUpdate();
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
+    window.addEventListener("wheel", cancelScrollAnimation, { passive: true });
+    window.addEventListener("touchstart", cancelScrollAnimation, { passive: true });
+    window.addEventListener("keydown", cancelScrollAnimation);
     return () => {
       cancelAnimationFrame(frame);
+      cancelScrollAnimation();
       if (menuNavigationTimer.current !== null) window.clearTimeout(menuNavigationTimer.current);
       if (menuNavigationFrame.current !== null) cancelAnimationFrame(menuNavigationFrame.current);
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
+      window.removeEventListener("wheel", cancelScrollAnimation);
+      window.removeEventListener("touchstart", cancelScrollAnimation);
+      window.removeEventListener("keydown", cancelScrollAnimation);
     };
   }, []);
 
@@ -112,10 +126,32 @@ export function Header() {
     const destination = target.id === "top" ? 0 : target.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
     target.tabIndex = -1;
     target.focus({ preventScroll: true });
-    window.scrollTo({
-      top: Math.max(0, destination),
-      behavior: "instant",
-    });
+    const scrollTarget = Math.min(Math.max(0, destination), document.documentElement.scrollHeight - window.innerHeight);
+    if (scrollAnimationFrame.current !== null) cancelAnimationFrame(scrollAnimationFrame.current);
+
+    const scrollStart = window.scrollY;
+    const scrollDistance = scrollTarget - scrollStart;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(scrollDistance) < 1) {
+      scrollAnimationFrame.current = null;
+      window.scrollTo({ top: scrollTarget, behavior: "instant" });
+    } else {
+      const startTime = performance.now();
+      const duration = Math.min(1000, Math.max(450, Math.abs(scrollDistance) * 0.45));
+
+      function animateScroll(now: number) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const easedProgress = 1 - (1 - progress) ** 3;
+        window.scrollTo({ top: scrollStart + scrollDistance * easedProgress, behavior: "instant" });
+
+        if (progress < 1) {
+          scrollAnimationFrame.current = requestAnimationFrame(animateScroll);
+        } else {
+          scrollAnimationFrame.current = null;
+        }
+      }
+
+      scrollAnimationFrame.current = requestAnimationFrame(animateScroll);
+    }
     if (window.location.hash) {
       window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
     }
@@ -192,7 +228,7 @@ export function Header() {
             </nav>
             <div className="mobile-menu-appearance">
               <p>Appearance</p>
-              <ThemeSwitcher showLabels />
+              <ThemeSwitcher />
             </div>
           </DialogContent>
         </Dialog>
