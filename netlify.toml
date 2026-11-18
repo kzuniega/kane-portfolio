@@ -1,0 +1,5 @@
+# BREVO_SENDER_NAME is a public display name that also appears as regular page
+# content, so it is excluded from secrets scanning. Real secrets (API keys) are
+# still scanned.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_NAME"
