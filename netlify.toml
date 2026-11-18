@@ -1,5 +1,6 @@
-# BREVO_SENDER_NAME is a public display name that also appears as regular page
-# content, so it is excluded from secrets scanning. Real secrets (API keys) are
-# still scanned.
+# BREVO_SENDER_NAME and BREVO_SENDER_EMAIL are public, non-secret values: the
+# sender name and address appear on every email sent and may also appear as
+# regular page content, so they are excluded from secrets scanning. Real
+# secrets (e.g. BREVO_API_KEY) are still scanned.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_NAME"
+  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_NAME,BREVO_SENDER_EMAIL"
