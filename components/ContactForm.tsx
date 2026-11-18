@@ -48,6 +48,19 @@ export function ContactForm() {
     },
   });
 
+  function toggleInlineMark(mark: "bold" | "italic") {
+    if (!editor) return;
+
+    const shouldUnset = editor.isActive(mark);
+    const chain = editor.chain().focus();
+
+    if (shouldUnset) {
+      chain.unsetMark(mark).run();
+    } else {
+      chain.setMark(mark).run();
+    }
+  }
+
   async function submitMessage(values: ContactFormValues) {
     setStatus(null);
 
@@ -126,7 +139,7 @@ export function ContactForm() {
               aria-label="Bold"
               aria-pressed={editor?.isActive("bold") ?? false}
               onMouseDown={(event) => event.preventDefault()}
-              onClick={() => editor?.chain().focus().toggleBold().run()}
+              onClick={() => toggleInlineMark("bold")}
               disabled={!editor}
             >
               <strong>B</strong>
@@ -136,7 +149,7 @@ export function ContactForm() {
               aria-label="Italic"
               aria-pressed={editor?.isActive("italic") ?? false}
               onMouseDown={(event) => event.preventDefault()}
-              onClick={() => editor?.chain().focus().toggleItalic().run()}
+              onClick={() => toggleInlineMark("italic")}
               disabled={!editor}
             >
               <em>I</em>
