@@ -19,14 +19,23 @@ export async function POST(request: Request) {
   const hashSecret = process.env.VIEWER_HASH_SECRET;
   const supabaseUrl = process.env.SUPABASE_URL?.replace(/\/+$/, "");
   const secretKey = process.env.SUPABASE_SECRET_KEY?.trim();
-  const legacyServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  const apiKey = secretKey || legacyServiceRoleKey;
+  const configuredApiKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const apiKey = secretKey || configuredApiKey;
+  const isSecretKey = Boolean(secretKey || configuredApiKey?.startsWith("sb_secret_"));
 
   if (!clientIp) {
     return Response.json({ error: "Unable to determine visitor address." }, { status: 400 });
   }
-  if (!hashSecret || hashSecret.length < 32 || !supabaseUrl || !apiKey) {
-    console.error("Viewer count is missing Supabase or hash-secret configuration.");
+  if (!hashSecret || hashSecret.length < 32) {
+    console.error("Viewer count requires VIEWER_HASH_SECRET to contain at least 32 characters.");
+    return Response.json({ error: "Viewer count is not configured." }, { status: 503 });
+  }
+  if (!supabaseUrl) {
+    console.error("Viewer count is missing SUPABASE_URL.");
+    return Response.json({ error: "Viewer count is not configured." }, { status: 503 });
+  }
+  if (!apiKey) {
+    console.error("Viewer count is missing SUPABASE_SECRET_KEY.");
     return Response.json({ error: "Viewer count is not configured." }, { status: 503 });
   }
 
@@ -41,7 +50,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         apikey: apiKey,
-        ...(secretKey ? {} : { Authorization: `Bearer ${legacyServiceRoleKey}` }),
+        ...(!isSecretKey ? { Authorization: `Bearer ${apiKey}` } : {}),
         "Content-Type": "application/json",
         Accept: "application/json",
       },
@@ -54,7 +63,8 @@ export async function POST(request: Request) {
   }
 
   if (!response.ok) {
-    console.error(`Supabase rejected viewer-count request with status ${response.status}.`);
+    const details = (await response.text()).slice(0, 1000);
+    console.error(`Supabase rejected viewer-count request with status ${response.status}: ${details}`);
     return Response.json({ error: "Viewer count is temporarily unavailable." }, { status: 502 });
   }
 
